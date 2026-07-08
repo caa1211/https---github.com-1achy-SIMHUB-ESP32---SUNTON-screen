@@ -101,7 +101,7 @@ public:
     //    Serial.println("Test seriale avviato!"); //x debug
 		
 		tft.init();
-		tft.setRotation(3);
+		tft.setRotation(1);
 		tft.fillScreen(TFT_BLACK);
 
         bleGamepadConfig.setAutoReport(true);  // in false non invia i comandi a windows
@@ -181,34 +181,35 @@ public:
 	void idle() {}
 
 	void drawPage1(bool forceUpdate = false) {
+		int cellFontSize = 4;
 		drawRpmMeter(0, 0, SCREEN_WIDTH, HALF_CELL_HEIGHT);
 		drawGear(COL[2], COL[1]);
 				
 		// First+Second Column (Lap times)
-		drawCell(COL[0], ROW[1], bestLapTime, "bestLapTime", "Best Lap", "left", TFT_WHITE, 4, forceUpdate);
-		drawCell(COL[0], ROW[2], lastLapTime, "lastLapTime", "Last Lap", "left", TFT_WHITE, 4, forceUpdate);
-		drawCell(COL[0], ROW[3], currentLapTime, "currenLapTime", "Current Lap", "left", lapInvalidated == "True" ? TFT_RED : TFT_WHITE, 4, forceUpdate);
+		drawCell(COL[0], ROW[1], bestLapTime, "bestLapTime", "Best Lap", "left", TFT_WHITE, cellFontSize, forceUpdate);
+		drawCell(COL[0], ROW[2], lastLapTime, "lastLapTime", "Last Lap", "left", TFT_WHITE, cellFontSize, forceUpdate);
+		drawCell(COL[0], ROW[3], currentLapTime, "currenLapTime", "Current Lap", "left", lapInvalidated == "True" ? TFT_RED : TFT_WHITE, cellFontSize, forceUpdate);
 
 		// Third Column (speed)
-		drawCell(COL[2], ROW[3], speed, "speed", "Speed", "center", TFT_WHITE, 4, forceUpdate);
+		drawCell(COL[2], ROW[3], speed, "speed", "Speed", "center", TFT_WHITE, cellFontSize, forceUpdate);
 
 		// Fourth+Fifth Column (delta)
-		drawCell(SCREEN_WIDTH, ROW[1], sessionBestLiveDeltaSeconds, "sessionBestLiveDeltaSeconds", "Delta", "right", sessionBestLiveDeltaSeconds.indexOf('-') >= 0 ? TFT_GREEN : TFT_RED, 4, forceUpdate);
-		drawCell(SCREEN_WIDTH, ROW[2], sessionBestLiveDeltaProgressSeconds, "sessionBestLiveDeltaProgressSeconds", "Delta P", "right", sessionBestLiveDeltaProgressSeconds.indexOf('-') >= 0 ? TFT_GREEN : TFT_RED, 4, forceUpdate);
+		drawCell(SCREEN_WIDTH, ROW[1], sessionBestLiveDeltaSeconds, "sessionBestLiveDeltaSeconds", "Delta", "right", sessionBestLiveDeltaSeconds.indexOf('-') >= 0 ? TFT_GREEN : TFT_RED, cellFontSize, forceUpdate);
+		drawCell(SCREEN_WIDTH, ROW[2], sessionBestLiveDeltaProgressSeconds, "sessionBestLiveDeltaProgressSeconds", "Delta P", "right", sessionBestLiveDeltaProgressSeconds.indexOf('-') >= 0 ? TFT_GREEN : TFT_RED, cellFontSize, forceUpdate);
 
 		// (TC, ABS, BB)
 		if (isTCCutNull == "False")
-			drawCell(COL[0], ROW[4], tcTcCut, "tcTcCut", "TC TC2", "center", TFT_YELLOW, 4, forceUpdate);
+			drawCell(COL[0], ROW[4], tcTcCut, "tcTcCut", "TC TC2", "center", TFT_YELLOW, cellFontSize, forceUpdate);
 		else
-			drawCell(COL[0], ROW[4], tcLevel, "tcLevel", "TC", "center", TFT_YELLOW, 4, forceUpdate);
-		drawCell(COL[1], ROW[4], absLevel, "absLevel", "ABS", "center", TFT_BLUE, 4, forceUpdate);
-		drawCell(COL[2], ROW[4], brakeBias, "brakeBias", "BB", "center", TFT_MAGENTA, 4, forceUpdate);
+			drawCell(COL[0], ROW[4], tcLevel, "tcLevel", "TC", "center", TFT_YELLOW, cellFontSize, forceUpdate);
+		drawCell(COL[1], ROW[4], absLevel, "absLevel", "ABS", "center", TFT_BLUE, cellFontSize, forceUpdate);
+		drawCell(COL[2], ROW[4], brakeBias, "brakeBias", "BB", "center", TFT_MAGENTA, cellFontSize, forceUpdate);
 
 		// (tyre pressure)
-		drawCell(COL[3], ROW[3], tyrePressureFrontLeft, "tyrePressureFrontLeft", "FL", "center", TFT_CYAN, 4, forceUpdate);
-		drawCell(COL[4], ROW[3], tyrePressureFrontRight, "tyrePressureFrontRight", "FR", "center", TFT_CYAN, 4, forceUpdate);
-		drawCell(COL[3], ROW[4], tyrePressureRearLeft, "tyrePressureRearLeft", "RL", "center", TFT_CYAN, 4, forceUpdate);
-		drawCell(COL[4], ROW[4], tyrePressureRearRight, "tyrePressureRearRight", "RR", "center", TFT_CYAN, 4, forceUpdate);
+		drawCell(COL[3], ROW[3], tyrePressureFrontLeft, "tyrePressureFrontLeft", "FL", "center", TFT_CYAN, cellFontSize, forceUpdate);
+		drawCell(COL[4], ROW[3], tyrePressureFrontRight, "tyrePressureFrontRight", "FR", "center", TFT_CYAN, cellFontSize, forceUpdate);
+		drawCell(COL[3], ROW[4], tyrePressureRearLeft, "tyrePressureRearLeft", "RL", "center", TFT_CYAN, cellFontSize, forceUpdate);
+		drawCell(COL[4], ROW[4], tyrePressureRearRight, "tyrePressureRearRight", "RR", "center", TFT_CYAN, cellFontSize, forceUpdate);
 	}
 
 	void drawColoredButton(int x, int y, int width, int height, String label, uint16_t color)   //disegna i pulsanti della pagina 2
@@ -248,23 +249,32 @@ void drawPage2() // pagina pulsanti
 
 
 
-	void drawGear(int32_t x, int32_t y)
-	{
-		// draw gear only when it changes
-		if (gear != prev_gear)
-		{
-			// tft.loadFont("Formula1_Regular_web_072pt7b", SPIFFS);
-			tft.setTextColor(TFT_YELLOW, TFT_BLACK);
-			tft.setTextSize(8);
-			tft.setTextDatum(MC_DATUM);
-			tft.setCursor(x + 12, y + HALF_CELL_HEIGHT);
-			tft.print(gear);
-			tft.setTextSize(1);
-			tft.setTextDatum(TL_DATUM);
+void drawGear(int32_t x, int32_t y)
+{
+    if (gear != prev_gear)
+    {
+        tft.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT, TFT_BLACK);
 
-			prev_gear = gear;
-		}
-	}
+        tft.setTextColor(gear == "N" ? TFT_GREEN : TFT_YELLOW, TFT_BLACK);
+        tft.setTextDatum(MC_DATUM);
+
+        if (SCREEN_WIDTH >= 480)
+        {
+            tft.setTextSize(11);   // 3.5 吋 480x320
+            tft.drawString(gear, x + CELL_WIDTH / 2, y + CELL_HEIGHT / 2 + 4);
+        }
+        else
+        {
+            tft.setTextSize(8);    // 2.8 吋 320x240
+            tft.drawString(gear, x + CELL_WIDTH / 2, y + CELL_HEIGHT / 2 + 2);
+        }
+
+        tft.setTextSize(1);
+        tft.setTextDatum(TL_DATUM);
+
+        prev_gear = gear;
+    }
+}
 
 	boolean isDrawGearRpmRedRec()
 	{
