@@ -6,7 +6,7 @@
 // selezione la configurazione nella cartella lgfx_user
 // #include <LGFX_AUTODETECT.hpp>  // Preparare la classe "LGFX"
 // #include <lgfx_user/LGFX_ESP8266_sample.hpp>
-#include <lgfx_user/LGFX_ESP32_esp32-2432s028.hpp> 
+#include <lgfx_user/LGFX_ESP32_esp32-3248s035.hpp>
 //  dashboard + free deck grafica
 #include <Arduino.h>
 #include <map>
@@ -14,8 +14,8 @@
 
 static LGFX tft;
 
-static const int SCREEN_WIDTH = 320;
-static const int SCREEN_HEIGHT = 240;
+static const int SCREEN_WIDTH = 480;
+static const int SCREEN_HEIGHT = 320;
 static const int X_CENTER = SCREEN_WIDTH / 2;
 static const int Y_CENTER = SCREEN_HEIGHT / 2;
 static const int ROWS = 5;
